@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OD1 GAME</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #101323;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+header { padding: 20px; color: #00f5d4; }
+#score { font-size: 25px; margin: 10px; }
+#game {
+  width: 92%;
+  max-width: 420px;
+  height: 430px;
+  margin: 15px auto;
+  background: linear-gradient(#202b4b, #101323);
+  border: 2px solid #00f5d4;
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+}
+#coin {
+  position: absolute;
+  font-size: 38px;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+button {
+  background: #00f5d4;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: bold;
+}
+#message { color: #ffd166; min-height: 24px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎮 OD1 GAME</h1>
+  <p>Tangalarni yig‘ va rekord o‘rnat!</p>
+</header>
+
+<div id="score">Ochko: 0</div>
+<div id="time">Vaqt: 30</div>
+
+<div id="game">
+  <div id="coin" hidden>🪙</div>
+</div>
+
+<button id="start">O‘YINNI BOSHLASH</button>
+<p id="message">Boshlash tugmasini bosing!</p>
+<p>© OD1 GAME</p>
+
+<script>
+const game = document.getElementById("game");
+const coin = document.getElementById("coin");
+const scoreText = document.getElementById("score");
+const timeText = document.getElementById("time");
+const message = document.getElementById("message");
+const start = document.getElementById("start");
+
+let score = 0;
+let time = 30;
+let active = false;
+let timer;
+
+function moveCoin() {
+  const maxX = game.clientWidth - coin.offsetWidth;
+  const maxY = game.clientHeight - coin.offsetHeight;
+  coin.style.left = Math.random() * maxX + "px";
+  coin.style.top = Math.random() * maxY + "px";
+}
+
+start.addEventListener("click", () => {
+  clearInterval(timer);
+  score = 0;
+  time = 30;
+  active = true;
+  scoreText.textContent = "Ochko: 0";
+  timeText.textContent = "Vaqt: 30";
+  message.textContent = "Tangalarni tezroq yig‘ing!";
+  start.textContent = "QAYTA BOSHLASH";
+  coin.hidden = false;
+  moveCoin();
+
+  timer = setInterval(() => {
+    time--;
+    timeText.textContent = "Vaqt: " + time;
+    if (time <= 0) {
+      clearInterval(timer);
+      active = false;
+      coin.hidden = true;
+      message.textContent = "O‘yin tugadi! Natija: " + score;
+      start.textContent = "YANA O‘YNASH";
+    }
+  }, 1000);
+});
+
+coin.addEventListener("click", collectCoin);
+coin.addEventListener("touchstart", collectCoin);
+
+function collectCoin(event) {
+  if (!active) return;
+  event.preventDefault();
+  score++;
+  scoreText.textContent = "Ochko: " + score;
+  moveCoin();
+}
+</script>
+</body>
+</html>
